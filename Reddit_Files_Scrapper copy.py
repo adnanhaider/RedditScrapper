@@ -31,8 +31,8 @@ def createDriver():
     chrome_options.add_experimental_option("detach", True)
     chrome_options.add_experimental_option("prefs", { 
     "profile.default_content_setting_values.notifications": 2 })
-    # driver = webdriver.Chrome(executable_path='chromedriver', options=chrome_options)
-    driver = webdriver.Chrome(executable_path='./chromedriver', options=chrome_options)
+    driver = webdriver.Chrome(executable_path='chromedriver', options=chrome_options)
+    # driver = webdriver.Chrome(executable_path='./chromedriver', options=chrome_options)
     return driver
 
 def new_process(url):
@@ -96,7 +96,8 @@ def get_post_data(driver, card, i):
         try:
             post_data['timestamp'] = card.find_element_by_css_selector('a[data-click-id="timestamp"]').text
         except:
-            post_data['timestamp'] = "1 Hour ago"
+            print('could not find the timestamp id')
+            
         try:
             post_data['comments'] = card.find_element_by_css_selector('span.FHCV02u6Cp2zYL0fhQPsO').text.split()[0]
         except:
@@ -145,41 +146,42 @@ def more_than_hour_ago(timestamp):
 
 def first_project_functionality():
     urls_new = [
-        'https://reddit.com/r/btc/new/',
+        # 'https://reddit.com/r/btc/new/',
         'https://reddit.com/r/bitcoin/new/',
-        'https://reddit.com/r/ethereum/new/',
-        'https://reddit.com/r/monero/new/',
-        'https://reddit.com/r/dashpay/new/',
-        'https://reddit.com/r/ethtrader/new/',
-        'https://reddit.com/r/ethfinance/new/',
-        'https://reddit.com/r/xmrtrader/new/',
+        # 'https://reddit.com/r/ethereum/new/',
+        # 'https://reddit.com/r/monero/new/',
+        # 'https://reddit.com/r/dashpay/new/',
+        # 'https://reddit.com/r/ethtrader/new/',
+        # 'https://reddit.com/r/ethfinance/new/',
+        # 'https://reddit.com/r/xmrtrader/new/',
     ]
     urls_hot = [
-        'https://reddit.com/r/btc/hot/',
+        # 'https://reddit.com/r/btc/hot/',
         'https://reddit.com/r/bitcoin/hot/',
-        'https://reddit.com/r/ethereum/hot/',
-        'https://reddit.com/r/monero/hot/',
-        'https://reddit.com/r/dashpay/hot/',
-        'https://reddit.com/r/ethtrader/hot/',
-        'https://reddit.com/r/ethfinance/hot/',
-        'https://reddit.com/r/xmrtrader/hot/',
+        # 'https://reddit.com/r/ethereum/hot/',
+        # 'https://reddit.com/r/monero/hot/',
+        # 'https://reddit.com/r/dashpay/hot/',
+        # 'https://reddit.com/r/ethtrader/hot/',
+        # 'https://reddit.com/r/ethfinance/hot/',
+        # 'https://reddit.com/r/xmrtrader/hot/',
     ]
     not_ran = True
     running = True
     counter = 1
     hour = 1
     main_csv = 'output/main.csv'
+    # main_txt = 'output/main.txt'
 
     while running:
         if counter == 2: # here you will put 24 
             running = False
         counter += 1
         for i, _ in enumerate(urls_new):
-            result      = new_process(urls_new[i])
+            # result      = new_process(urls_new[i])
             # print(result,'<------ result')
-            total_vote  = hot_process(urls_hot[i])
-            # result = {"online_users":'1.5k',"number_of_posts": '3','data':[{'timestamp': '7 minutes ago', 'comments': '3', 'comments_on_post': ['hello how are you doing.','what is the rate for bitcoin today?', 'blahblahablah']}, {'timestamp': '7 minutes ago', 'comments': '3', 'comments_on_post': ['hello how are "you" doing.','what is the rate for bitcoin today?', 'blahblahablah']},{'timestamp': '7 minutes ago', 'comments': '3', 'comments_on_post': ['hello how are you doing.','what is the rate for bitcoin today?', 'blahblahablah']}]}
-            # total_vote = 999
+            # total_vote  = hot_process(urls_hot[i])
+            result = {"online_users":'1.5k',"number_of_posts": '3','data':[{'timestamp': '7 minutes ago', 'comments': '3', 'comments_on_post': ['hello how are you doing.','what is the rate for bitcoin today?', 'blahblahablah']}, {'timestamp': '7 minutes ago', 'comments': '3', 'comments_on_post': ['hello how are you doing.','what is the rate for bitcoin today?', 'blahblahablah']},{'timestamp': '7 minutes ago', 'comments': '3', 'comments_on_post': ['hello how are you doing.','what is the rate for bitcoin today?', 'blahblahablah']}]}
+            total_vote = 999
 
             web_name = urls_hot[i].split("/")[-3]
             with open(web_name+".csv", 'a+', newline='', buffering=1,encoding='utf-8') as f:
@@ -195,7 +197,14 @@ def first_project_functionality():
                 f.write(str(result['number_of_posts']))
                 f.write('\n')
                 f.write('"')
-                f.write(str(result['data']).replace('"',"``"))
+                # f.write('[')
+                # for dictionary in result['data']:
+                #     f.write(json.dumps(dictionary,ensure_ascii=True))
+                # f.write(str(result['data']))
+                # f.write(']')
+                # f.DictWriter(str(result['data']))
+                # f.write(str(result['data']))
+                f.write(str(result['data']))
                 f.write('"')
                 f.write('\n')
                 f.write(str(total_vote))
